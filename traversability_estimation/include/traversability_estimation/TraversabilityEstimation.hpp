@@ -93,6 +93,8 @@ class TraversabilityEstimation {
    */
   void imageCallback(const sensor_msgs::Image& image);
 
+  void gridMapCallback(const grid_map_msgs::GridMap& elevationMap);
+
   /*!
    * ROS service callback function that computes the traversability of a footprint
    * at each map cell position twice: first oriented in x-direction, and second
@@ -175,7 +177,9 @@ class TraversabilityEstimation {
 
   //! Image subscriber.
   ros::Subscriber imageSubscriber_;
+  ros::Subscriber gridMapSubscriber_;
   std::string imageTopic_;
+  std::string gridMapTopic_;
   grid_map::GridMap imageGridMap_;
   grid_map::Position imagePosition_;
   bool getImageCallback_;

@@ -51,6 +51,7 @@ TraversabilityEstimation::TraversabilityEstimation(ros::NodeHandle& nodeHandle)
       nodeHandle_.advertiseService("traversability_footprint", &TraversabilityEstimation::traversabilityFootprint, this);
   saveToBagService_ = nodeHandle_.advertiseService("save_traversability_map_to_bag", &TraversabilityEstimation::saveToBag, this);
   imageSubscriber_ = nodeHandle_.subscribe(imageTopic_, 1, &TraversabilityEstimation::imageCallback, this);
+  gridMapSubscriber_ = nodeHandle_.subscribe(gridMapTopic_, 1, &TraversabilityEstimation::gridMapCallback, this);
 
   if (acceptGridMapToInitTraversabilityMap_) {
     gridMapToInitTraversabilityMapSubscriber_ = nodeHandle_.subscribe(
@@ -90,6 +91,7 @@ bool TraversabilityEstimation::readParameters() {
   }
   // Read parameters for image subscriber.
   imageTopic_ = param_io::param<std::string>(nodeHandle_, "image_topic", "/image_elevation");
+  gridMapTopic_ = param_io::param<std::string>(nodeHandle_, "grid_map_topic", "/elevation_mapping/elevation_map");
   imageResolution_ = param_io::param(nodeHandle_, "resolution", 0.03);
   imageMinHeight_ = param_io::param(nodeHandle_, "min_height", 0.0);
   imageMaxHeight_ = param_io::param(nodeHandle_, "max_height", 1.0);
@@ -164,6 +166,13 @@ void TraversabilityEstimation::imageCallback(const sensor_msgs::Image& image) {
   grid_map::GridMapRosConverter::addLayerFromImage(image, "elevation", imageGridMap_, imageMinHeight_, imageMaxHeight_);
   grid_map_msgs::GridMap elevationMap;
   grid_map::GridMapRosConverter::toMessage(imageGridMap_, elevationMap);
+  traversabilityMap_.setElevationMap(elevationMap);
+}
+
+void TraversabilityEstimation::gridMapCallback(const grid_map_msgs::GridMap& elevationMap) {
+  if (!getImageCallback_) {
+    getImageCallback_ = true;
+  }
   traversabilityMap_.setElevationMap(elevationMap);
 }
 
