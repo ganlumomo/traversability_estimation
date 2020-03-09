@@ -5,7 +5,7 @@ traversability_map_filters:
     params:
       input_layer: elevation
       output_layers_prefix: surface_normal_
-      radius: 1.0
+      radius: 0.5
       normal_vector_positive_axis: z
   - name: slopeFilter
     type: traversabilityFilters/SlopeFilter
