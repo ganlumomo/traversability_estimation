@@ -11,7 +11,7 @@ traversability_map_filters:
     type: traversabilityFilters/SlopeFilter
     params:
       map_type: traversability_slope
-      critical_value: 1.2
+      critical_value: 1.5
   - name: stepFilter
     type: traversabilityFilters/StepFilter
     params:
@@ -24,7 +24,7 @@ traversability_map_filters:
     type: traversabilityFilters/RoughnessFilter
     params:
       map_type: traversability_roughness
-      critical_value: 0.6
+      critical_value: 0.45
       estimation_radius: 0.5
   - name: weightedSumFilter
     type: gridMapFilters/MathExpressionFilter
